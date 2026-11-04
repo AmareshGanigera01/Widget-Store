@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Medicine bottle with a cross cut-out. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="#FFFFFFFF" android:pathData="M7,2h10v3H7z" />
+    <path android:fillColor="#FFFFFFFF" android:fillType="evenOdd"
+        android:pathData="M6,6h12v14c0,1.1 -0.9,2 -2,2H8c-1.1,0 -2,-0.9 -2,-2V6zM11,10v2.5H8.5v2H11V17h2v-2.5h2.5v-2H13V10z" />
+</vector>
