@@ -1,26 +1,28 @@
-#database connection
+p1 #database connection
+connected to pg local db
+we need cloud db connection, as firebase,etc ....
 
-##Color palet 
+p5 ##Color palet 
 #add for MyWidgets
 
-##reminders
+p2 ##reminders
 #add add custom date and time 
 #add pattern in date or time 
 #add background images (generated/custom)
 #add custom category
 #add 
 
-##text coping for notebook 
+p4 ##text coping for notebook 
 #add feature when turned on automatically scans any copied text and adds it in the specific notebook
 #add background images (generated/custom)
 #add 
 
-##notebook
+p3 ##notebook
 #add customisation for notebook (theme, texture, ...)
 #add image generation
 #add 
 
-##Leaderboard
+p6 ##Leaderboard
 #add a Leaderboard of dev who are building widget and their most used and loved widgets on oneline
 #add widget of the week
 #add 
