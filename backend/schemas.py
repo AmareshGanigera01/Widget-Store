@@ -110,10 +110,30 @@ class UserFavorite(UserFavoriteBase):
     class Config:
         from_attributes = True
 
-# Token schemas (for future authentication)
+# Authentication schemas
 class Token(BaseModel):
     access_token: str
     token_type: str
 
 class TokenData(BaseModel):
     username: Optional[str] = None
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+class RegisterRequest(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+
+# Sync schemas
+class SyncPushRequest(BaseModel):
+    widgets: List[Dict[str, Any]]
+    notebooks: List[Dict[str, Any]]
+    entries: List[Dict[str, Any]]
+
+class SyncPullResponse(BaseModel):
+    widgets: List[Dict[str, Any]] = []
+    notebooks: List[Dict[str, Any]] = []
+    entries: List[Dict[str, Any]] = []

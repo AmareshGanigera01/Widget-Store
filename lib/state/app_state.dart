@@ -6,6 +6,7 @@ import '../models/marketplace_listing.dart';
 import '../models/notebook.dart';
 import '../models/widget_type.dart';
 import '../services/runtime_sync.dart';
+import '../services/cloud_sync_service.dart';
 
 class MarketplaceState extends ChangeNotifier {
   MarketplaceState(this._repo);
@@ -123,6 +124,9 @@ class NotebooksState extends ChangeNotifier {
   Future<void> create(String name, int color) async {
     await _repo.create(name, color: color);
     await load();
+
+    // Add this line to instantly sync the new notebook to PostgreSQL
+    CloudSyncService().pushToCloud();
   }
 
   Future<void> remove(String id) async {

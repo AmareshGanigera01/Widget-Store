@@ -6,23 +6,31 @@ import 'data/app_database.dart';
 import 'data/repository_factory.dart';
 import 'data/repositories.dart';
 import 'overlay/overlay_app.dart';
+import 'services/auth_service.dart';
 import 'services/reminder_service.dart';
 import 'services/runtime_sync.dart';
 import 'state/app_state.dart';
 import 'ui/home_shell.dart';
+import 'ui/screens/login_screen.dart';
 import 'ui/theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final db = await AppDatabase.instance();
 
+  // Check if we already have a saved JWT token from a previous login
+  final savedToken = await AuthService().getToken();
+
   // Configuration: switch to API backend for marketplace
+  // Set to false to use local SQLite only, true to use FastAPI backend
   const useApiBackend = bool.fromEnvironment('USE_API_BACKEND', defaultValue: false);
-  const apiAuthToken = String.fromEnvironment('API_AUTH_TOKEN', defaultValue: '');
+  const envAuthToken = String.fromEnvironment('API_AUTH_TOKEN', defaultValue: '');
   
+  final activeToken = savedToken ?? (envAuthToken.isEmpty ? null : envAuthToken);
+
   final factory = RepositoryFactory(
     useApiBackend: useApiBackend,
-    apiAuthToken: apiAuthToken.isEmpty ? null : apiAuthToken,
+    apiAuthToken: activeToken,
   );
 
   final progress = factory.createProgressRepository(db);
@@ -30,6 +38,7 @@ Future<void> main() async {
   final market = MarketplaceState(factory.createMarketplaceRepository(db));
   final myWidgets = MyWidgetsState(factory.createWidgetRepository(db), RuntimeSync(reminders));
   final notebooks = NotebooksState(factory.createNotebookRepository(db));
+  
   // Loaded in the background; screens show a spinner until ready.
   market.load();
   myWidgets.load();
@@ -44,7 +53,7 @@ Future<void> main() async {
         ChangeNotifierProvider.value(value: myWidgets),
         ChangeNotifierProvider.value(value: notebooks),
       ],
-      child: const WidgetMarketApp(),
+      child: WidgetMarketApp(isLoggedIn: activeToken != null),
     ),
   );
 }
@@ -64,7 +73,9 @@ void captureMain() {
 }
 
 class WidgetMarketApp extends StatelessWidget {
-  const WidgetMarketApp({super.key});
+  final bool isLoggedIn;
+  
+  const WidgetMarketApp({super.key, this.isLoggedIn = false});
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +84,7 @@ class WidgetMarketApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: appTheme(Brightness.light),
       darkTheme: appTheme(Brightness.dark),
-      home: const HomeShell(),
+      home: isLoggedIn ? const HomeShell() : const LoginScreen(),
     );
   }
 }
